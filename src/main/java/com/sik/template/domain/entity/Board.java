@@ -1,6 +1,6 @@
-package com.sik.template.model.entity;
+package com.sik.template.domain.entity;
 
-import com.sik.template.model.base.BaseAuditTimeEntity;
+import com.sik.template.domain.base.BaseAuditTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
