@@ -83,7 +83,7 @@ spring.jpa.hibernate.ddl-auto=create-drop
 ### Repository
 * package : [repository](src/main/java/com/sik/template/domain/repository)
 * JpaRepository 를 상속하여 기본 CRUD 및 페이징 기능 추상화.
-
+* 페이징이나 복잡한 조인 등의 작업은 아래의 querydsl 을 이용한 CustomRepository를 이용한다. 
 
 
 ## Querydsl
@@ -136,9 +136,35 @@ configurations {
 }
 ```
 * Gradle > Tasks > other > compileQuerydsl 우클릭 > run ... 실행.
-* /build/generated/querydsl 위치에 QEntityName 으로 생성됨을 확인.
+* /build/generated/querydsl 위치에 Q엔티티가 생성됨을 확인.
 
 #### Config
 * file : [QuerydslConfig.gradle](src/main/java/com/sik/template/config/QuerydslConfig.java)
 
+### Querydsl CustomRepository
+* Gradle build를 통해 생성된 Q엔티티를 이용해 쿼리를 수행할 수 있다. 
+* 기본 Repository 패키지가 아닌, 비즈니스로직 구현 패키지에 위치한다. 
+* JpaRepository를 상속받는 인터페이스와 구현체 클래스를 구현한다. 
+* file : [BoardCustomRepository.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepository.java)
+* file : [BoardCustomRepositoryImpl.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepositoryImpl.java)
+* Q엔티티에 접근하여 다양한 쿼리를 구현할 수 있다. 
+```java
+import static com.sik.template.domain.entity.QBoard.board;
+...(중략)...
+
+@Repository
+@AllArgsConstructor
+public class BoardCustomRepositoryImpl implements BoardCustomRepository {
+    private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<Board> findAllBoard(Pageable pageable) {
+        return jpaQueryFactory.selectFrom(board)
+                .leftJoin(board.boardComments)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+}
+```
 
