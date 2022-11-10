@@ -191,10 +191,13 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 * BaseDTO 를 상속받아 기본 Audit 정보를 멤버로 갖는다.
 * ModelMapper 를 이용한 Entity Convert 메서드를 구현해주었다. 
 * file : [BaseDTO.java](src/main/java/com/sik/template/biz/api/base/dto/BaseDTO.java)
+* file : [BoardDTO.java](src/main/java/com/sik/template/biz/api/board/dto/BoardDTO.java)
 
 ### VO
 * Controller 에 ModelAttribute로 전달하는 검색조건 객체. 
 * BaseVO를 상속받아 기본 검색 정보를 멤버로 갖는다.
+* file : [BaseVO.java](src/main/java/com/sik/template/biz/api/base/vo/BaseVO.java)
+* file : [BoardVO.java](src/main/java/com/sik/template/biz/api/board/vo/BoardVO.java)
 
 ### Repository
 * 기본 Repository 와 Custom Repository로 구분하여 사용한다. 
@@ -227,8 +230,8 @@ implementation 'org.modelmapper:modelmapper:3.1.0'
 * 필드명이 같은 경우, map() 메서드를 이용해 매핑할 수 있다. 
 * 컬렉션의 경우, stream 을 이용해 아래와 같이 일괄 변환할 수 있다. 
 ```java
-List<Board> entityList = boardCustomRepository.findAllBoard(pageable);
-return entityList.stream().map(o -> modelMapper.map(o, BoardDTO.class)).collect(Collectors.toList());
+List<Board> entities = boardCustomRepository.findAllBoard(pageable);
+return entities.stream().map(o -> modelMapper.map(o, BoardDTO.class)).collect(Collectors.toList());
 ```
 * 필드명이 다른 경우, PropertyMap 을 구현체에 map().setter() 를 이용해 매핑할 수 있다. 
 * PropertyMap 을 이용해 skip 할 수 있다. 
