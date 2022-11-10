@@ -176,8 +176,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
 ### Response
 * API가 항상 일정한 포맷으로 반환하기 위해 공용 Response 를 정의한다. 
+* 단순 객체를 반환하는 경우, 운영 중 스펙 변경이 매우 어려워 Wrapping 을 수행. 
 * Generic Type 으로 VO 및 DTO를 정의한다.
-* file : [BaseDTO.java](src/main/java/com/sik/template/biz/api/base/dto/BaseDTO.java)
 * file : [RestApiResponse.java](src/main/java/com/sik/template/biz/api/base/response/RestApiResponse.java)
 
 ### Controller

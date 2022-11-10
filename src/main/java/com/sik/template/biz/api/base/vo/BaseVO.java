@@ -1,19 +1,27 @@
 package com.sik.template.biz.api.base.vo;
 
-import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class BaseVO {
-    private String searchCondition = null;
-    private String searchText = null;
+    @Schema(description = "searchCondition", type = "String")
+    private String searchCondition;
 
-    private Long searchId = null;
-    private LocalDateTime searchFromDate = null;
-    private LocalDateTime searchToDate = null;
+    @Schema(description = "searchText", type = "String")
+    private String searchText;
+
+    @Schema(description = "searchId", type = "String", example = "1")
+    private Long searchId;
+
+    @Schema(description = "searchFromDate", type = "LocalDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate searchFromDate;
+
+    @Schema(description = "searchToDate", type = "LocalDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate searchToDate;
 }
