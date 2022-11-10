@@ -26,13 +26,13 @@ public class Board extends BaseAuditTimeEntity {
     @Basic(fetch = FetchType.LAZY)
     @Lob
     @Column(name = "CONTENT")
-    private byte content;
+    private String content;
 
     @Column(name = "HIT", nullable = false)
     private int hit;
 
     @Builder
-    public Board(String title, byte content) {
+    public Board(String title, String content) {
         this.title = title;
         this.content = content;
     }

@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter @Setter @ToString
+@Data
 public class BaseDTO implements Serializable {
     private String createdBy;
     private LocalDateTime createdDate;
