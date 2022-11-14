@@ -11,6 +11,12 @@
 * SDK : Azul zulu version 17.0.4
 * Gradle : 7.5.1
 
+-------------------------
+## Logging
+* Springboot 기본 Logging Framework 는 Logback.
+* MultiThread 환경에서 비동기 로깅성능이 중시되는 경우, Log4j2 교체한다.
+  * 방법 : spring-boot-starter-logging 모듈에 대하여 spring-boot-starter-log4j2 으로 교체를 명시. 
+
 
 -------------------------
 ## Swagger
