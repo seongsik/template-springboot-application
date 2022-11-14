@@ -1,20 +1,32 @@
-// Querydsl
 buildscript {
     ext {
-        queryDslVersion = "5.0.0"
+        // Spring Boot
+        bootVersion = '2.7.5'
+
+        // Hibernate
+        querydslVersion = '5.0.0'
+
+        // Database
+        h2Version = '2.1.214'
+
+        // misc
+        slf4jVersion = '1.7.25'
+        lombokVersion = '1.18.24'
+        modelmapperVersion = '3.1.0'
+        swaggerVersion = '1.6.12'
     }
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.7.5'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'java'
-    id 'com.ewerk.gradle.plugins.querydsl' version "1.0.10"
+    id "org.springframework.boot" version "${bootVersion}"
+    id "io.spring.dependency-management" version '1.0.15.RELEASE'
+    id "java"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
-group = 'com.sik'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+group = "com.sik"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
 
 configurations {
     compileOnly {
@@ -27,33 +39,31 @@ repositories {
 }
 
 dependencies {
-    // Spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    // Spring Data Jpa
+    // Spring Boot
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // Querydsl
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    // Hibernate
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
+    implementation "com.querydsl:querydsl-apt:${querydslVersion}"
 
-    // ModelMapper
-    implementation 'org.modelmapper:modelmapper:3.1.0'
+    // Database
+    // - H2
+    runtimeOnly "com.h2database:h2:${h2Version}"
 
-    // Database - H2
-    runtimeOnly 'com.h2database:h2'
 
-    // Project Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    // Swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
-
+    // misc
+    // - swagger ui
+    implementation "org.springdoc:springdoc-openapi-ui:${swaggerVersion}"
+    // - Project Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    // - ModelMapper
+    implementation "org.modelmapper:modelmapper:${modelmapperVersion}"
 }
 
-tasks.named('test') {
+tasks.named("test") {
     useJUnitPlatform()
 }
 
