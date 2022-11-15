@@ -1,4 +1,4 @@
-package com.sik.template.biz.api.board.repository;
+package com.sik.template.domain.repository;
 
 import com.sik.template.biz.api.board.dto.BoardDTO;
 import com.sik.template.biz.api.board.vo.BoardVO;

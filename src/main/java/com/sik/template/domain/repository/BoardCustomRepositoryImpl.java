@@ -1,8 +1,7 @@
-package com.sik.template.biz.api.board.repository;
+package com.sik.template.domain.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sik.template.biz.api.board.dto.BoardDTO;
 import com.sik.template.biz.api.board.vo.BoardVO;
 import com.sik.template.domain.entity.Board;
 import static com.sik.template.domain.entity.QBoard.board;

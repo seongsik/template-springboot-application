@@ -228,13 +228,6 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 * file : [BaseVO.java](src/main/java/com/sik/template/biz/api/base/vo/BaseVO.java)
 * file : [BoardVO.java](src/main/java/com/sik/template/biz/api/board/vo/BoardVO.java)
 
-### Repository
-* 기본 Repository 와 Custom Repository로 구분하여 사용한다. 
-* 기본 기능은 domain 패키지의 기본 Repository를 사용한다.
-* 비즈니스 로직 패키지의 Querydsl 이 적용된 Custom Repository를 사용해 페이징 및 구체적인 조인, 조건문을 구현한다.
-* file : [BoardCustomRepository.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepository.java)
-* file : [BoardCustomRepositoryImpl.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepositoryImpl.java)
-
 ### Service
 * Controller의 메서드 호출을 통해 필요한 데이터를 Repository로부터 반환한다. 
 * Entity로 반환되는 데이터를 DTO로 변환하여 반환한다.

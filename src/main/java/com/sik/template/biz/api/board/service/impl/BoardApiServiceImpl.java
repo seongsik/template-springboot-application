@@ -1,7 +1,7 @@
 package com.sik.template.biz.api.board.service.impl;
 
 import com.sik.template.biz.api.board.dto.BoardDTO;
-import com.sik.template.biz.api.board.repository.BoardCustomRepository;
+import com.sik.template.domain.repository.BoardCustomRepository;
 import com.sik.template.biz.api.board.service.BoardApiService;
 import com.sik.template.biz.api.board.vo.BoardVO;
 import com.sik.template.domain.repository.BoardRepository;
