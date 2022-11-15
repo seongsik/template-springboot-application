@@ -11,6 +11,29 @@
 * SDK : Azul zulu version 17.0.4
 * Gradle : 7.5.1
 
+
+-------------------------
+## Spring MVC Request Lifecycle
+#### Filter
+* 모든 Request 에 적용되어
+#### DispatcherServlet
+* Rqeust 를 분석하고 처리하기 위해 적절한 Controller 에 요청을 전달. 
+#### Common Services
+* 모든 요청에 대해 제공되는 서비스 레이어. 
+* i18n, Theme, File upload 등의 기능을 지원. 
+* DispatcherServlet 의 WebApplicationContext 에 정의. 
+#### Handler Mappings
+* 들어오는 Request를 Controller 클래스 내의 Handler Method 에 매핑.
+#### Handler Interceptor
+* 공통 로직 수행 용도의 Handler Interceptor를 등록.
+#### Handler Exception Resolver
+* 핸들러의 요청 처리 중 발생하는 예상하지 못한 예외를 처리하기 위해 설계. 
+#### View Resolver
+* Controller가 반환한 논리적인 이름을 기반으로 View를 해석하여 연결. 
+* ContentNegotiationViewResolverm FreeMarkerViewResolver, VelocityViewResolver, JasperReportsViewResolver 등.
+
+
+
 -------------------------
 ## Logging
 * Springboot 기본 Logging Framework 는 Logback.
