@@ -42,10 +42,10 @@ public class ApiExceptionAdvice {
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<RestApiExceptionResponse> exeptionHandler(HttpServletRequest request, final AccessDeniedException e) {
         return ResponseEntity
-                .status(ExceptionCode.ACCESS_DENIED.getStatus())
+                .status(ExceptionCode.UNAUTHORIZED.getStatus())
                 .body(
                         RestApiExceptionResponse.builder()
-                                .errorCode(ExceptionCode.ACCESS_DENIED.getCode())
+                                .errorCode(ExceptionCode.UNAUTHORIZED.getCode())
                                 .errorMessage(e.getMessage())
                                 .build()
                 );

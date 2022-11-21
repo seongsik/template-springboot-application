@@ -12,6 +12,9 @@
 * Gradle : 7.5.1
 
 
+
+
+
 -------------------------
 ## Spring MVC Request Lifecycle
 #### Filter
@@ -34,11 +37,18 @@
 
 
 
+
+
+
+
 -------------------------
 ## Logging
 * Springboot 기본 Logging Framework 는 Logback.
 * MultiThread 환경에서 비동기 로깅성능이 중시되는 경우, Log4j2 교체한다.
   * 방법 : spring-boot-starter-logging 모듈에 대하여 spring-boot-starter-log4j2 으로 교체를 명시. 
+
+
+
 
 
 -------------------------
@@ -82,6 +92,9 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 ```
 
 
+
+
+
 -------------------------
 ## Spring Data JPA
 
@@ -114,6 +127,10 @@ spring.jpa.hibernate.ddl-auto=create-drop
 * package : [repository](src/main/java/com/sik/template/domain/repository)
 * JpaRepository 를 상속하여 기본 CRUD 및 페이징 기능 추상화.
 * 페이징이나 복잡한 조인 등의 작업은 아래의 querydsl 을 이용한 CustomRepository를 이용한다. 
+
+
+
+
 
 
 -------------------------
@@ -176,9 +193,11 @@ configurations {
 * Gradle build를 통해 생성된 Q엔티티를 이용해 쿼리를 수행할 수 있다. 
 * 기본 Repository 패키지가 아닌, 비즈니스로직 구현 패키지에 위치한다. 
 * JpaRepository를 상속받는 인터페이스와 구현체 클래스를 구현한다. 
-* file : [BoardCustomRepository.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepository.java)
-* file : [BoardCustomRepositoryImpl.java](src/main/java/com/sik/template/biz/api/board/repository/BoardCustomRepositoryImpl.java)
+* 비즈니스 로직 패키지의 Querydsl 이 적용된 Custom Repository를 사용해 페이징 및 구체적인 조인, 조건문을 구현한다.
 * Q엔티티에 접근하여 다양한 쿼리를 구현할 수 있다. 
+* file : [BoardCustomRepository.java](src/main/java/com/sik/template/domain/repository/BoardCustomRepository.java)
+* file : [BoardCustomRepositoryImpl.java](src/main/java/com/sik/template/domain/repository/impl/BoardCustomRepositoryImpl.java)
+
 ```java
 import static com.sik.template.domain.entity.QBoard.board;
 ...(중략)...
@@ -198,6 +217,10 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     }
 }
 ```
+
+
+
+
 
 
 -------------------------
@@ -228,11 +251,14 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 * file : [BaseVO.java](src/main/java/com/sik/template/biz/api/base/vo/BaseVO.java)
 * file : [BoardVO.java](src/main/java/com/sik/template/biz/api/board/vo/BoardVO.java)
 
+
 ### Service
 * Controller의 메서드 호출을 통해 필요한 데이터를 Repository로부터 반환한다. 
 * Entity로 반환되는 데이터를 DTO로 변환하여 반환한다.
 * file : [BoardApiService.java](src/main/java/com/sik/template/biz/api/board/service/BoardApiService.java)
 * file : [BoardApiServiceImpl.java](src/main/java/com/sik/template/biz/api/board/service/impl/BoardApiServiceImpl.java)
+
+
 
 
 
@@ -269,6 +295,10 @@ mapper.addMappings(new PropertyMap<Board, BoardDTO>() {
 ```
 
 
+
+
+
+
 -------------------------
 ## Exception Handler
 * API 호출에 있어 Exception 발생 시 메시지를 반환한다. 
@@ -288,6 +318,11 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
 }
 ```
 
+
+
+
+
+
 -------------------------
 ## 국제화
 * 메시지에 대한 다국어 처리를 지원한다.
@@ -296,3 +331,151 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
 * 일반적으로 HTTP accept-language 헤더 값 또는 locale 정보를 기반으로 국제화 파일을 선택.
 * file : [MessageSourceConfig.java](src/main/java/com/sik/template/config/MessageSourceConfig.java)
 * file : [messages.properties](src/main/resources/messages.properties)
+
+
+
+
+
+
+
+-------------------------
+## Spring Security
+* 허가되지 않은 사용자에 대한 서비스 접근/수행을 제한. 
+
+
+### UserDetails
+* 사용자 정보를 담는 인터페이스이다.
+* Spring Security 에서 사용자의 정보를 불러오기 위해 구현해야 하는 인터페이스. 
+* 이 때, getUserName() 이 고유한 값을 의미하는데 중복되지 않는 DB 컬럼(PK) 설정을 권장. 
+
+#### Custom User Details 구현
+* Account(=User) 및 Role Entity 를 정의한다. 두 엔티티의 관계는 ManyToMany 이다.  
+* file : [Account.java](src/main/java/com/sik/template/domain/entity/Account.java)
+* file : [Role.java](src/main/java/com/sik/template/domain/entity/Role.java)
+
+* UserDetailsService 인터페이스를 상속하는 Service 와 구현체를 구현한다. 
+* 앞서 정의한 엔티티를 이용해 JPA 를 이용한 조회를 구현.
+* file : [AccountServiceImpl.java](src/main/java/com/sik/template/biz/api/account/service/impl/AccountServiceImpl.java)
+```java
+@Override
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  Account account = accountRepository.findByUsername(username).orElseThrow(
+          () -> new UsernameNotFoundException("Username : " + username + " not found")
+        );
+  return new User(account.getUsername(), account.getPassword(), getAuthorities(account));
+}
+```
+
+
+### JWT 
+* 토큰 기반 인증. 클라이언트가 서버로부터 인증 수행 후 토큰을 획득하여 매 요청 시 헤더에 전달.
+
+#### Dependencies
+* file : [build.gradle](build.gradle)
+```groovy
+implementation 'io.jsonwebtoken:jjwt:0.9.1'
+```
+
+#### Config
+* file : [JwtTokenProvider.java](src/main/java/com/sik/template/common/security/JwtTokenProvider.java)
+* 토큰의 생성과 검증을 수행하는 클래스를 정의한다.
+* 앞서 구축한 UserDetails 를 이용해 사용자 정보를 획득한다.
+```java
+public Authentication getAuthentication(String token) {
+  UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
+  return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+}
+```
+
+#### 토큰의 발급
+* 로그인 로직을 수행한 후, JwtTokenProvider 의 createToken 을 호출하여 토큰을 발행한다. 
+* file : [AccountController.java](src/main/java/com/sik/template/biz/api/account/controller/AccountController.java)
+```java
+  AccountDTO loginUser = (AccountDTO) accountService.loadUserByUsername(accountDTO.getUsername());
+  SignDTO signDTO = new SignDTO();
+
+  /*
+  * Password 검증 수행...
+  * */
+
+  List<String> roleList = loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+  String token = jwtTokenProvider.createToken(loginUser.getUsername(), roleList);
+```
+* 이후 토큰은 HTTP Header 에 포함하여 요청한다. 
+```text
+X-AUTH-TOKEN : [JWT_TOKEN]
+```
+
+
+### Spring boot Security
+#### Dependencies
+* file : [build.gradle](build.gradle)
+```groovy
+implementation 'org.springframework.boot:spring-boot-starter-security'
+```
+
+#### Config
+* WebSecurityConfigurerAdapter 는 Deprecated 되었다. 
+* SecurityFilterChain 을 Bean으로 등록하여 사용하여야 한다.
+* file : [SecurityConfig](src/main/java/com/sik/template/config/SecurityConfig.java)
+```java
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+  @Bean
+  public WebSecurityCustomizer configure() {
+    ...
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    ...
+  }
+}
+```
+
+### SecurityFilterChain
+* 다른 필터보다 먼저 springSecurityFilterChain을 사용하도록 DelegatingFilterProxy 를 등록.
+* 특정 요청에 대해 권한 검사를 수행, 적절한 Response 를 반환할 수 있다.
+* Swagger 및 h2-console 등 자격 검사 예외 처리할 수 있다. 
+* file : [SecurityConfig.java](src/main/java/com/sik/template/config/SecurityConfig.java)
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  return http
+  .antMatchers("/api/**")
+  .hasAuthority("API_CALL")
+        ...
+  .and()
+  .build();
+
+}
+```
+* 권한 설정 메소드
+  * antMatchers(String ... resources) : 권한을 설정할 리소스(URI)를 지정.
+    * permitAll() : 인증절차 없이 허용.
+    * hasAnyRole(String roleName) : 특정 권한을 가진 사용자만 접근을 허용. 
+  * anyRequests().authenticated() : antMatchers 에 지정한 리소스 외의 모든 요청은 인증절차 필요. 
+* 로그인 처리 메소드
+  * formLogin() : 로그인 페이지의 로그인 처리 및 성공 실패 처리 사용여부.
+  * loginPage(String uri) : 특정 로그인 페이지를 사용하고자 할 때 사용. 
+  * loginProcessingUrl(String uri) : 로그인 인증처리를 수행하는 URI 설정. 해당 리소스 호출 시 인증처리 필터 호출됨.
+  * defaultSuccessUrl(String uri) : 인증 성공 시 이동하는 페이지 정의. 
+  * successHandler() : 인증 성공 후 특정 핸들러가 실행되어야 하는 경우 정의. 
+  * failureUrl(String uri) : 인증 실패 시 이용하는 페이지 설정. 
+  * failureHandler() : 인증 실패 시 특정 핸들러가 실행되어야 하는 경우 정의. 
+* 커스텀 필터
+  * addFilterBefore(CUSTOM_FILTER, TARGET_FILTER) : TARGET_FILTER 앞에 CUSTOM_FILTER를 추가. 
+  * addFilterAfter(CUSTOM_FILTER, TARGET_FILTER) : TARGET_FILTER 뒤에 CUSTOM_FILTER를 추가.
+
+
+### Filter 에 JWT Token 적용
+* JWT 인증을 수행하기 위한 Filter 를 정의한다. 
+* file : [JwtAuthenticationFilter](src/main/java/com/sik/template/common/security/JwtAuthenticationFilter.java)
+
+* SecurityFilterChain 에 filter를 등록한다.
+* file : [SecurityConfig.java](src/main/java/com/sik/template/config/SecurityConfig.java)
+```java
+.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+```

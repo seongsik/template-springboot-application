@@ -1,10 +1,12 @@
-package com.sik.template.domain.repository;
+package com.sik.template.domain.repository.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sik.template.biz.api.board.vo.BoardVO;
 import com.sik.template.domain.entity.Board;
 import static com.sik.template.domain.entity.QBoard.board;
+
+import com.sik.template.domain.repository.BoardCustomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

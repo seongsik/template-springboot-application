@@ -3,6 +3,9 @@ buildscript {
         // Spring Boot
         bootVersion = '2.7.5'
 
+        // Security
+        jwtTokenVersion = '0.9.1'
+
         // Hibernate
         querydslVersion = '5.0.0'
 
@@ -42,7 +45,9 @@ dependencies {
     // Spring Boot
     implementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "io.jsonwebtoken:jjwt:${jwtTokenVersion}"
 
     // Hibernate
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
