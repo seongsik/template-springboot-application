@@ -16,7 +16,7 @@
 
 
 -------------------------
-## Spring MVC Request Lifecycle
+# Spring MVC Request Lifecycle
 #### Filter
 * 모든 Request 에 적용되어
 #### DispatcherServlet
@@ -42,7 +42,7 @@
 
 
 -------------------------
-## Logging
+# Logging
 * Springboot 기본 Logging Framework 는 Logback.
 * MultiThread 환경에서 비동기 로깅성능이 중시되는 경우, Log4j2 교체한다.
   * 방법 : spring-boot-starter-logging 모듈에 대하여 spring-boot-starter-log4j2 으로 교체를 명시. 
@@ -52,7 +52,7 @@
 
 
 -------------------------
-## Swagger
+# Swagger
 * Spring-Fox : Spring Boot 2.6 이하
 * Spring-Doc : Spring boot 2.6 이상 
 
@@ -68,7 +68,7 @@ implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
 
 
 -------------------------
-## H2 Database
+# Database
 * H2 Embedded Database 연동.
 * 서비스 실행 후 http://localhost:8080/h2-console
 
@@ -97,7 +97,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 
 -------------------------
-## Spring Data JPA
+# Spring Data JPA
 
 #### Dependencies
 * file : [build.gradle](build.gradle)
@@ -225,7 +225,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
 
 -------------------------
-## Rest API
+# Rest API
 
 ### Response
 * API가 항상 일정한 포맷으로 반환하기 위해 공용 Response 를 정의한다. 
@@ -301,7 +301,7 @@ mapper.addMappings(new PropertyMap<Board, BoardDTO>() {
 
 
 -------------------------
-## Exception Handler
+# Exception Handling
 * API 호출에 있어 Exception 발생 시 메시지를 반환한다. 
 * 오류 코드를 정의하고, @RestControllerAdvice 어드바이저를 구현하여 exceptionHandler 로 예외처리를 한곳에서 처리한다.
 * file : [ExceptionCode.java](src/main/java/com/sik/template/common/exception/ExceptionCode.java)
@@ -325,7 +325,7 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
 
 
 -------------------------
-## 국제화
+# 국제화
 * 메시지에 대한 다국어 처리를 지원한다.
 * MessageSource 구현체를 Bean으로 등록하며 BaseNames에 지정한 접두어 리소스들을 메시지 처리한다.  
 * messages_언어코드_국가코드.properties 형태로 타 언어를 지원할 수 있다. 
@@ -340,11 +340,11 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
 
 
 -------------------------
-## Spring Security
+# Spring Security
 * 허가되지 않은 사용자에 대한 서비스 접근/수행을 제한. 
 
 
-### UserDetails
+## UserDetails
 * 사용자 정보를 담는 인터페이스이다.
 * Spring Security 에서 사용자의 정보를 불러오기 위해 구현해야 하는 인터페이스. 
 * 이 때, getUserName() 이 고유한 값을 의미하는데 중복되지 않는 DB 컬럼(PK) 설정을 권장. 
@@ -368,7 +368,7 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
 ```
 
 
-### JWT 
+## JWT Token
 * 토큰 기반 인증. 클라이언트가 서버로부터 인증 수행 후 토큰을 획득하여 매 요청 시 헤더에 전달.
 
 #### Dependencies
@@ -388,7 +388,7 @@ public Authentication getAuthentication(String token) {
 }
 ```
 
-#### 토큰의 발급
+### 토큰의 발급
 * 로그인 로직을 수행한 후, JwtTokenProvider 의 createToken 을 호출하여 토큰을 발행한다. 
 * file : [AccountController.java](src/main/java/com/sik/template/biz/api/account/controller/AccountController.java)
 ```java
@@ -408,7 +408,7 @@ X-AUTH-TOKEN : [JWT_TOKEN]
 ```
 
 
-### Spring boot Security
+## Spring boot Security
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
