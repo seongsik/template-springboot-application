@@ -93,6 +93,19 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 ```
 
 
+-------------------------
+# 국제화
+* 메시지에 대한 다국어 처리를 지원한다.
+* MessageSource 구현체를 Bean으로 등록하며 BaseNames에 지정한 접두어 리소스들을 메시지 처리한다.
+* messages_언어코드_국가코드.properties 형태로 타 언어를 지원할 수 있다.
+* 일반적으로 HTTP accept-language 헤더 값 또는 locale 정보를 기반으로 국제화 파일을 선택.
+* file : [MessageSourceConfig.java](src/main/java/com/sik/template/config/MessageSourceConfig.java)
+* file : [messages.properties](src/main/resources/messages.properties)
+
+
+
+-------------------------
+# 프로파일 관리 (작업중)
 
 
 
@@ -318,24 +331,6 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
   "errorMessage": "사용자 정의 예외처리 테스트"
 }
 ```
-
-
-
-
-
-
--------------------------
-# 국제화
-* 메시지에 대한 다국어 처리를 지원한다.
-* MessageSource 구현체를 Bean으로 등록하며 BaseNames에 지정한 접두어 리소스들을 메시지 처리한다.  
-* messages_언어코드_국가코드.properties 형태로 타 언어를 지원할 수 있다. 
-* 일반적으로 HTTP accept-language 헤더 값 또는 locale 정보를 기반으로 국제화 파일을 선택.
-* file : [MessageSourceConfig.java](src/main/java/com/sik/template/config/MessageSourceConfig.java)
-* file : [messages.properties](src/main/resources/messages.properties)
-
-
-
-
 
 
 
