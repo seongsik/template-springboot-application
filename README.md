@@ -82,6 +82,7 @@ runtimeOnly 'com.h2database:h2'
 * file : [application.properties](src/main/resources/application.properties)
 ```properties
 spring.h2.console.enabled=true
+spring.h2.console.settings.web-allow-others=true
 spring.h2.console.path=/h2-console
 
 spring.datasource.url=jdbc:h2:~/test;
