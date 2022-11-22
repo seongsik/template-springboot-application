@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -26,17 +27,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username : " + username + " not found"));
+        List<Role> roles = account.getRoles();
 
         AccountDTO accountDTO = AccountDTO.convertAccount(account);
-        accountDTO.setAuthorities((Collection<GrantedAuthority>) getAuthorities(account));
+        accountDTO.setAuthorities(AuthorityUtils.createAuthorityList(roles.stream().map(Role::getRoleName).toArray(String[]::new)));
 
         return accountDTO;
     }
-
-    private static Collection<? extends GrantedAuthority> getAuthorities(Account account) {
-        String[] userRoles = account.getRoles().stream().map(Role::getRoleName).toArray(String[]::new);
-        return AuthorityUtils.createAuthorityList(userRoles);
-    }
-
 
 }

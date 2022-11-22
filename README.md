@@ -59,12 +59,30 @@
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
-implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
+implementation "org.springdoc:springdoc-openapi-ui:1.6.6"
 ```
 
 #### Config
 * file : [SwaggerConfig.java](src/main/java/com/sik/template/config/SwaggerConfig.java)
 * file : [IndexController.java](src/main/java/com/sik/template/biz/IndexController.java)
+
+
+### Swagger with Authentication
+* 스키마 정의를 통해 JWT Token 을 Header 에 삽입하도록 구현할 수 있다.
+* file : [SwaggerConfig.java](src/main/java/com/sik/template/config/SwaggerConfig.java)
+```java
+@SecuritySchemes({
+      @SecurityScheme(
+              name = "X-AUTH-TOKEN",
+              type = SecuritySchemeType.APIKEY,
+              description = "JWT Token",
+              in = SecuritySchemeIn.HEADER,
+              paramName = "X-AUTH-TOKEN"
+      )
+})
+```
+
+
 
 
 -------------------------
@@ -99,7 +117,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 * 메시지에 대한 다국어 처리를 지원한다.
 * MessageSource 구현체를 Bean으로 등록하며 BaseNames에 지정한 접두어 리소스들을 메시지 처리한다.
 * messages_언어코드_국가코드.properties 형태로 타 언어를 지원할 수 있다.
-* 일반적으로 HTTP accept-language 헤더 값 또는 locale 정보를 기반으로 국제화 파일을 선택.
+* 일반적으로 HTTP accept-language 헤더 값 또는 locale 정보를 기반으로 국제화 파일을 선택한다.
 * file : [MessageSourceConfig.java](src/main/java/com/sik/template/config/MessageSourceConfig.java)
 * file : [messages.properties](src/main/resources/messages.properties)
 
@@ -132,7 +150,7 @@ public class TestProfileOnlyBean {
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
-implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 ```
 
 #### Config
@@ -150,9 +168,13 @@ spring.jpa.hibernate.ddl-auto=create-drop
 * Entity 에는 Setter 메소드를 정의하지 않는다. 
 * LOB 타입 열에 @Basic(fetch = FetchType.LAZY) 설정하여 기본 지연로딩을 설정.
 
-#### Entity Auditing 
-* file : [BaseAuditTimeEntity.java](src/main/java/com/sik/template/domain/base/BaseAuditTimeEntity.java) 
+#### Entity Auditing
 * 추상 클래스를 선언하여 상속받는 하위 Entity 들은 생성/변경이력 컬럼 선언을 자동화.
+* 부모 클래스를 선언하여 Entity 에 일괄 적용할 수 있다. 
+  * file : [BaseAuditTimeEntity.java](src/main/java/com/sik/template/domain/base/BaseAuditTimeEntity.java) 
+* 로그인 세션 또는 JWT 토큰으로부터 생성자/수정자 PK를 획득할 수 있다.
+  * file : [LoginUserAuditorAware.java](src/main/java/com/sik/template/common/security/LoginUserAuditorAware.java)
+  * file : [AuditingConfig.java](src/main/java/com/sik/template/config/AuditingConfig.java)
 
 ### Repository
 * package : [repository](src/main/java/com/sik/template/domain/repository)
@@ -252,7 +274,21 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
 
 -------------------------
-# Faker (작업중)
+# Faker
+* Java-faker 는 테스트 데이터를 만들어주는 패키지.
+
+#### Dependencies
+* file : [build.gradle](build.gradle)
+```groovy
+implementation "org.yaml:snakeyaml:1.33"
+implementation "com.github.javafaker:javafaker:1.0.2"
+```
+
+### Data Initialize
+* 서비스 실행 시 샘플 데이터를 삽입하도록 구현할 수 있다. 
+* 프로파일 local 및 test 에서만 동작하도록 구현한다. 
+  * [DatabaseInitializer.java](src/main/java/com/sik/template/domain/DatabaseInitializer.java)
+
 
 
 
@@ -303,7 +339,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
-implementation 'org.modelmapper:modelmapper:3.1.0'
+implementation "org.modelmapper:modelmapper:3.1.0"
 ```
 
 ### ModelMapper.map
@@ -388,7 +424,7 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
-implementation 'io.jsonwebtoken:jjwt:0.9.1'
+implementation "io.jsonwebtoken:jjwt:0.9.1"
 ```
 
 #### Config
@@ -426,7 +462,7 @@ X-AUTH-TOKEN : [JWT_TOKEN]
 #### Dependencies
 * file : [build.gradle](build.gradle)
 ```groovy
-implementation 'org.springframework.boot:spring-boot-starter-security'
+implementation "org.springframework.boot:spring-boot-starter-security"
 ```
 
 #### Config

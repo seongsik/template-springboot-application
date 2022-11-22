@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sik.template.biz.api.board.dto.BoardDTO;
 import com.sik.template.domain.entity.Account;
 import com.sik.template.domain.entity.Board;
+import com.sik.template.domain.entity.Role;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Data
 public class AccountDTO implements UserDetails {
@@ -25,14 +28,11 @@ public class AccountDTO implements UserDetails {
 
     private String email;
 
-    private String roles;
-
     private Collection<GrantedAuthority> authorities;
 
 
     public static AccountDTO convertAccount(Account entity) {
         ModelMapper mapper = new ModelMapper();
-
         mapper.addMappings(new PropertyMap<Account, AccountDTO>() {
             @Override
             protected void configure() {

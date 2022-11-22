@@ -17,6 +17,8 @@ buildscript {
         lombokVersion = '1.18.24'
         modelmapperVersion = '3.1.0'
         swaggerVersion = '1.6.12'
+        snakeyamlVersion = '1.33'
+        javafakerVersion = '1.0.2'
     }
 }
 
@@ -66,6 +68,10 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     // - ModelMapper
     implementation "org.modelmapper:modelmapper:${modelmapperVersion}"
+    // - Faker
+    implementation "org.yaml:snakeyaml:${snakeyamlVersion}"
+    implementation "com.github.javafaker:javafaker:${javafakerVersion}"
+
 }
 
 tasks.named("test") {

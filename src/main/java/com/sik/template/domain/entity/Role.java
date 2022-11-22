@@ -1,5 +1,7 @@
 package com.sik.template.domain.entity;
 
+import com.sik.template.domain.base.BaseAuditTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "ROLE")
-public class Role {
+public class Role extends BaseAuditTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROLE_ID")
@@ -26,4 +28,7 @@ public class Role {
     )
     private List<Account> accounts;
 
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 }

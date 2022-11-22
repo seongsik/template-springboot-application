@@ -42,7 +42,8 @@ public class SecurityConfig {
         return http
                 .authorizeRequests()
                     .antMatchers("/h2-console/**").permitAll()
-//                    .antMatchers("/api/**").hasAuthority("USER_NAME")
+                    .antMatchers("/api/account/signin").permitAll()
+                    .antMatchers("/api/**").hasAuthority("API_CALL")
 
 
                 .and()

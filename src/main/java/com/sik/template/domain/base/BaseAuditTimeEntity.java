@@ -37,12 +37,23 @@ public abstract class BaseAuditTimeEntity implements Serializable {
 
     @PrePersist
     public void onPrePersist(){
-        this.createdDate = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        this.lastModifiedDate = this.createdDate;
+//        this.createdDate = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+//        this.lastModifiedDate = this.createdDate;
+
+        this.createdDate = this.lastModifiedDate = LocalDateTime.now();
     }
 
     @PreUpdate
     public void onPreUpdate(){
-        this.lastModifiedDate = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+//        this.lastModifiedDate = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 }

@@ -1,5 +1,8 @@
 package com.sik.template.domain.entity;
 
+import com.sik.template.domain.base.BaseAuditTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,10 +10,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "ACCOUNT")
-public class Account {
+public class Account extends BaseAuditTimeEntity {
 
     @Id
     @Column(name = "USERNAME")
@@ -28,7 +33,7 @@ public class Account {
     @Column
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ACCOUNTS_ROLES",
             joinColumns = @JoinColumn(name = "USERNAME"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID")
