@@ -2,6 +2,7 @@ package com.sik.template.domain.entity;
 
 import com.sik.template.domain.base.BaseAuditTimeEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,9 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "ROLE")
 public class Role extends BaseAuditTimeEntity {

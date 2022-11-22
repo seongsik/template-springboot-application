@@ -1,16 +1,16 @@
 package com.sik.template.domain.entity;
 
 import com.sik.template.domain.base.BaseAuditTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "BOARD")
 public class Board extends BaseAuditTimeEntity {
@@ -31,11 +31,6 @@ public class Board extends BaseAuditTimeEntity {
     @Column(name = "HIT", nullable = false)
     private int hit;
 
-    @Builder
-    public Board(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
 
     @OneToMany(mappedBy = "board", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<BoardComment> boardComments = new ArrayList<>();

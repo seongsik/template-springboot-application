@@ -2,6 +2,8 @@ package com.sik.template.domain;
 
 import com.github.javafaker.Faker;
 import com.sik.template.domain.entity.Account;
+import com.sik.template.domain.entity.Board;
+import com.sik.template.domain.entity.BoardComment;
 import com.sik.template.domain.entity.Role;
 import com.sik.template.domain.repository.AccountRepository;
 import com.sik.template.domain.repository.BoardCommentRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 @AllArgsConstructor
@@ -47,6 +50,7 @@ public class DatabaseInitializer {
         roles.add(role1);
         roles.add(role2);
 
+        List<Account> accounts = new ArrayList<>();
         for(int i=0; i<10; i++) {
             String username = i==0 ? "sik" : faker.name().fullName().toLowerCase().replace(" ", "");
 
@@ -62,8 +66,39 @@ public class DatabaseInitializer {
             account.setLastModifiedBy("DBA");
 
             accountRepository.save(account);
+            accounts.add(account);
         }
 
 
+        // Insert Board, Comments
+        Random rand = new Random();
+        for(int i=0; i<10; i++) {
+            int accountIdx = rand.nextInt(accounts.size());
+            Board board = Board.builder()
+                    .title(faker.name().title())
+                    .content(faker.book().genre())
+                    .build();
+
+            board.setCreatedBy(accounts.get(accountIdx).getUsername());
+            board.setLastModifiedBy(accounts.get(accountIdx).getUsername());
+            boardRepository.save(board);
+
+            int commentCnt = rand.nextInt(3);
+            for(int j=0; j<commentCnt; j++) {
+                accountIdx = rand.nextInt(accounts.size());
+                BoardComment boardComment = BoardComment.builder()
+                        .board(board)
+                        .title(faker.name().title())
+                        .content(faker.book().title())
+                        .build();
+
+                boardComment.setCreatedBy(accounts.get(accountIdx).getUsername());
+                boardComment.setLastModifiedBy(accounts.get(accountIdx).getUsername());
+
+                boardCommentRepository.save(boardComment);
+            }
+
+
+        }
     }
 }

@@ -1,14 +1,14 @@
 package com.sik.template.domain.entity;
 
 import com.sik.template.domain.base.BaseAuditTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "BOARD_COMMENT")
 public class BoardComment extends BaseAuditTimeEntity {
@@ -24,16 +24,12 @@ public class BoardComment extends BaseAuditTimeEntity {
     @Basic(fetch = FetchType.LAZY)
     @Lob
     @Column(name = "CONTENT")
-    private byte content;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 
-    @Builder
-    public BoardComment(String title, byte content) {
-        this.title = title;
-        this.content = content;
-    }
+
 
 }
