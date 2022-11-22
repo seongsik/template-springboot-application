@@ -12,8 +12,63 @@
 * Gradle : 7.5.1
 
 
+-------------------------
+# Contents
+- [Spring MVC Request Lifecycle](#spring-mvc-request-lifecycle)
+  - [Filter](#filter)
+  - [DispatcherServlet](#dispatcherservlet)
+  - [Common Services](#common-services)
+  - [Handler Mappings](#handler-mappings)
+  - [Handler Interceptor](#handler-interceptor)
+  - [Handler Exception Resolver](#handler-exception-resolver)
+  - [View Resolver](#view-resolver)
+- [Logging](#logging)
+- [Swagger](#swagger)
+  - [Dependencies](#dependencies)
+  - [Config](#config)
+  + [Swagger with Authentication](#swagger-with-authentication)
+- [Database](#database)
+  - [Dependencies](#dependencies-1)
+  - [Config](#config-1)
+- [i18n](#i18n)
+- [Profile Management](#profile-management)
+- [Spring Data JPA](#spring-data-jpa)
+  - [Dependencies](#dependencies-2)
+  - [Config](#config-2)
+  + [Entity](#entity)
+    - [Entity Auditing](#entity-auditing)
+  + [Repository](#repository)
+  * [Querydsl](#querydsl)
+    - [Dependencies](#dependencies-3)
+    - [Config](#config-3)
+    + [Querydsl CustomRepository](#querydsl-customrepository)
+- [Faker](#faker)
+  - [Dependencies](#dependencies-4)
+  + [Data Initialize](#data-initialize)
+- [Rest API](#rest-api)
+  + [Response](#response)
+  + [Controller](#controller)
+  + [DTO](#dto)
+  + [VO](#vo)
+  + [Service](#service)
+  * [ModelMapper](#modelmapper)
+    - [Dependencies](#dependencies-5)
+    + [ModelMapper.map](#modelmappermap)
+- [Exception Handling](#exception-handling)
+- [Spring Security](#spring-security)
+  * [UserDetails](#userdetails)
+    - [Custom User Details](#custom-user-details)
+  * [JWT Token](#jwt-token)
+    - [Dependencies](#dependencies-6)
+    - [Config](#config-4)
+    + [Publish Token](#publish-token)
+  * [Spring boot Security](#spring-boot-security)
+    - [Dependencies](#dependencies-7)
+    - [Config](#config-5)
+    + [SecurityFilterChain](#securityfilterchain)
+    + [JWT Token Authentication Filter](#jwt-token-authentication-filter)
 
-
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 -------------------------
 # Spring MVC Request Lifecycle
@@ -113,7 +168,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 
 -------------------------
-# 국제화
+# i18n
 * 메시지에 대한 다국어 처리를 지원한다.
 * MessageSource 구현체를 Bean으로 등록하며 BaseNames에 지정한 접두어 리소스들을 메시지 처리한다.
 * messages_언어코드_국가코드.properties 형태로 타 언어를 지원할 수 있다.
@@ -124,7 +179,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 
 -------------------------
-# 프로파일 관리
+# Profile Management
 * Profile 을 지정하여 어플리케이션의 구성을 Profile 별로 달리 할수 있다. 
 * application.properties 를 application-[PROFILE_NAME].properties 으로 구성한다. 
   * [application-local.properties](src/main/resources/application-local.properties)
@@ -399,7 +454,7 @@ throw new ApiBizException(ExceptionCode.RUNTIME_EXCEPTION, messageSource.getMess
 * Spring Security 에서 사용자의 정보를 불러오기 위해 구현해야 하는 인터페이스. 
 * 이 때, getUserName() 이 고유한 값을 의미하는데 중복되지 않는 DB 컬럼(PK) 설정을 권장. 
 
-#### Custom User Details 구현
+#### Custom User Details
 * Account(=User) 및 Role Entity 를 정의한다. 두 엔티티의 관계는 ManyToMany 이다.  
 * file : [Account.java](src/main/java/com/sik/template/domain/entity/Account.java)
 * file : [Role.java](src/main/java/com/sik/template/domain/entity/Role.java)
@@ -438,7 +493,7 @@ public Authentication getAuthentication(String token) {
 }
 ```
 
-### 토큰의 발급
+### Publish Token
 * 로그인 로직을 수행한 후, JwtTokenProvider 의 createToken 을 호출하여 토큰을 발행한다. 
 * file : [AccountController.java](src/main/java/com/sik/template/biz/api/account/controller/AccountController.java)
 ```java
@@ -521,7 +576,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
   * addFilterAfter(CUSTOM_FILTER, TARGET_FILTER) : TARGET_FILTER 뒤에 CUSTOM_FILTER를 추가.
 
 
-### Filter 에 JWT Token 적용
+### JWT Token Authentication Filter
 * JWT 인증을 수행하기 위한 Filter 를 정의한다. 
 * file : [JwtAuthenticationFilter](src/main/java/com/sik/template/common/security/JwtAuthenticationFilter.java)
 
