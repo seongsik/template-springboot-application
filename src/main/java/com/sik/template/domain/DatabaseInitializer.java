@@ -72,7 +72,7 @@ public class DatabaseInitializer {
 
         // Insert Board, Comments
         Random rand = new Random();
-        for(int i=0; i<10; i++) {
+        for(int i=0; i<40; i++) {
             int accountIdx = rand.nextInt(accounts.size());
             Board board = Board.builder()
                     .title(faker.name().title())
