@@ -93,6 +93,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 ```
 
 
+
 -------------------------
 # 국제화
 * 메시지에 대한 다국어 처리를 지원한다.
@@ -105,9 +106,25 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 
 -------------------------
-# 프로파일 관리 (작업중)
+# 프로파일 관리
+* Profile 을 지정하여 어플리케이션의 구성을 Profile 별로 달리 할수 있다. 
+* application.properties 를 application-[PROFILE_NAME].properties 으로 구성한다. 
+  * [application-local.properties](src/main/resources/application-local.properties)
+  * [application-test.properties](src/main/resources/application-test.properties)
+  * [application-prod.properties](src/main/resources/application-prod.properties)
 
-
+* Application 실행 시, 아래 프로퍼티를 지정하면 해당 프로파일이 적용된다.
+```text
+--spring.profiles.active=[PROFILE_NAME]
+```
+* 또는 특정 Bean 이 지정된 Profile 에서만 등록되도록 설정할 수 있다.
+```java
+@Component
+@Profile("test") // 이 클래스는 test Profile 에서만 빈으로 등록된다.
+public class TestProfileOnlyBean {
+  ...
+}
+```
 
 -------------------------
 # Spring Data JPA
@@ -234,6 +251,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
 
 
+-------------------------
+# Faker (작업중)
 
 
 
