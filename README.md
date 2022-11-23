@@ -73,22 +73,62 @@
 -------------------------
 # Spring MVC Request Lifecycle
 #### Filter
-* 모든 Request 에 적용되어
+* J2EE 표준 스펙 기능으로 DispatcherServlet 에 요청이 전달되기 전/후에 URL 패턴에 맞는 요청에 대해 부가작업을 수행.
+* 최전방의 DispatcherServlet보다 앞서 수행되므로, 필터는 Spring 범위 밖에서 처리된다.
+  * Spring Container 가 아닌 Web Container 에의해 관리(Bean 등록은 됨)
+* javax.servlet 의 Filter 인터페이스를 구현.
+  * init() : Filter 객체 초기화, Web Container에 의해 1회 수행. 
+  * doFilter() : url-pattern 에 맞는 요청에 대한 처리 수행. 전달인자 FilterChain chain 에 의해 다음 대상으로 요청을 전달. 
+  * destroy() : Filter 객체를 서비스에서 제거. Web Container에 의해 1회 수행.
+```text
+Filter는 대체로 Spring과 무관한 전역적으로 처리하는 작업에 대한 처리를 구현한다.
+보안 검사 등으로 스프링 컨테이너 도달 전에 차단하는 등 안정성을 확보할 수 있다. 
+ServletRequest, ServletResponse 를 직접 조작할 수 있다는 점에서 Interceptor 보다 강력한 기술.
+
+Interceptor 는 클라이언트 요청에 대한 전역적 처리를 구현. 컨트롤러로 넘겨주기 위한 정보를 가공하기에 용이함. 
+```
+
 #### DispatcherServlet
-* Rqeust 를 분석하고 처리하기 위해 적절한 Controller 에 요청을 전달. 
+* HTTP 프로토콜로 진입하는 모든 요청을 먼저 받아 적절한 컨트롤러로 요청을 전달. 
+* DispatcherServlet 은 HandlerAdapter 어댑터 인터페이스를 통해 요청을 위임. 
+  * 어댑터 패턴을 적용하여 컨트롤러의 다양한 구현 방식에 무관하게 요청을 위임할 수 있다. 
+* 정적 자원에 대한 처리
+  * 특정 패턴의 요청은 정적 자원에 대한 요청으로 처리함을 명시하는 방법.
+  * 대응하는 컨트롤러 매핑이 없는 경우 정적 자원에 대한 요청으로 처리. 
+
 #### Common Services
 * 모든 요청에 대해 제공되는 서비스 레이어. 
 * i18n, Theme, File upload 등의 기능을 지원. 
 * DispatcherServlet 의 WebApplicationContext 에 정의. 
+
 #### Handler Mappings
-* 들어오는 Request를 Controller 클래스 내의 Handler Method 에 매핑.
+* RequestMappingHandlerMapping Class.
+* 요청 매핑 정보를 관리하고, 요청이 왔을 때 이를 처리하는 대상(Handler)를 찾는 클래스.
+* 실제 매핑 정보는 상속하는 부모 클래스 AbstractHandlerMethodMapping 의 MappingRegistry 에 기록된다. 
+  * MappingRegistry<RequestMappingInfo, MappingRegistration>
+  * RequestMappingInfo : Http Method 와 URI 를 포함한 헤더, 파라미터 등의 조건
+  * MappingRegistration : HandlerMethod. 매핑되는 컨트롤러의 메소드와 컨트롤러 빈 정보.
+
 #### Handler Interceptor
-* 공통 로직 수행 용도의 Handler Interceptor를 등록.
+* Dispatcher Servlet 이 컨트롤러 호출 전후 요청과 응답을 참조/가공할 수 있는 기능을 제공. 
+  * preHandle() : 컨트롤러 메소드 호출 전 수행. 반환 타입(boolean)의 값으로 다음 절차의 수행을 제어할 수 있다. 
+  * postHandle() : 컨트롤러 메소드 호출 후 수행. Exception 발생 시 수행되지 않는다. 
+  * afterCompletion() : 뷰 수준의 처리까지 모두 완료된 후 수행. 요청 처리 중 사용한 리소스를 반환할 때 사용하기 적합. 
+* AOP Advice 로 대체할 수 있으나, Request 객체를 얻을 수 없고 컨트롤러 메소드 구현방식이 다양하여 모두 대응하기 어렵다. 
+
 #### Handler Exception Resolver
 * 핸들러의 요청 처리 중 발생하는 예상하지 못한 예외를 처리하기 위해 설계. 
+* 에러 처리가 시작되는 곳은 DispatcherServlet. doDispatch 는 Exception 과 Throwable 을 catch 한다. 
+* 컨트롤러에 정의한 ExceptionHandler 로 처리가 불가한 경우, 모든 ControllerAdvice Bean 을 검사하여 예외처리한다. 
+
 #### View Resolver
-* Controller가 반환한 논리적인 이름을 기반으로 View를 해석하여 연결. 
-* ContentNegotiationViewResolverm FreeMarkerViewResolver, VelocityViewResolver, JasperReportsViewResolver 등.
+* Controller 는 출력할 View 와 View 에 전달할 객체를 담은 ModelAndView 객체를 반환. 
+* 반환된 View 의 논리적인 이름을 기반으로 ViewResolver 가 해석하여 연결. 
+* ViewResolver 의 주요 구현 클래스
+  * ContentNegotiationViewResolver : 요청 URL 확장자(MediaType)를 이용해 AcceptHandler 를 사용한 탐색. 
+  * FreeMarkerViewResolver : FreeMarker 기반의 템플릿을 탐색.  
+  * VelocityViewResolver : Velocity 기반의 뷰를 탐색. 
+  * JasperReportsViewResolver : Jasper 리포트 파일로 정의된 뷰를 탐색. 
 
 
 
